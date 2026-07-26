@@ -45,8 +45,8 @@ listener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
 
 ```shell
 mkdir -p /opt/homebrew/opt/kafka/data/kafka1 \
-    /opt/homebrew/opt/kafka/data/kafka2 \
-    /opt/homebrew/opt/kafka/data/kafka3
+  /opt/homebrew/opt/kafka/data/kafka2 \
+  /opt/homebrew/opt/kafka/data/kafka3
 ```
 ```shell
 open .zshrc
@@ -57,15 +57,15 @@ export KAFKA_CLUSTER_ID=3jT9yIIYS-CzIvkk69WhdA
 -> from `kafka-storage random-uuid`
 ```shell
 kafka-storage format -t $KAFKA_CLUSTER_ID \
-    -c /opt/homebrew/opt/kafka/config/kafka1.properties
+  -c /opt/homebrew/opt/kafka/config/kafka1.properties
 ```
 ```shell
 kafka-storage format -t $KAFKA_CLUSTER_ID \
-    -c /opt/homebrew/opt/kafka/config/kafka2.properties
+  -c /opt/homebrew/opt/kafka/config/kafka2.properties
 ```
 ```shell
 kafka-storage format -t $KAFKA_CLUSTER_ID \
-    -c /opt/homebrew/opt/kafka/config/kafka3.properties
+  -c /opt/homebrew/opt/kafka/config/kafka3.properties
 ```
 
 # Starting Kafka (daemon mode)
@@ -101,4 +101,39 @@ kafka-server-stop --node-id=1
 
 ```shell
 kafka-server-stop --process-role=broker
+```
+
+# Producing messages
+
+```shell
+kafka-topics \
+  --create \
+  --topic products.prices.changelog \
+  --partitions 1 \
+  --replication-factor 1 \
+  --bootstrap-server localhost:9092
+```
+```shell
+echo "coffee pads 10" | kafka-console-producer \
+  --topic products.prices.changelog \
+  --bootstrap-server localhost:9092
+```
+```shell
+kafka-console-producer \
+  --topic products.prices.changelog \
+  --bootstrap-server localhost:9092
+```
+
+# Consuming messages
+
+```shell
+kafka-console-consumer \
+  --topic products.prices.changelog \
+  --bootstrap-server localhost:9092
+```
+```shell
+kafka-console-consumer \
+  --topic products.prices.changelog \
+  --from-beginning \
+  --bootstrap-server localhost:9092
 ```
