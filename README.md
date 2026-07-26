@@ -1,2 +1,104 @@
-# kafka-lab
-kafka-lab
+# Configuring Kafka
+
+```shell
+mkdir /opt/homebrew/opt/kafka/config
+touch /opt/homebrew/opt/kafka/config/kafka1.properties
+touch /opt/homebrew/opt/kafka/config/kafka2.properties
+touch /opt/homebrew/opt/kafka/config/kafka3.properties
+
+open /opt/homebrew/opt/kafka/config/kafka1.properties
+open /opt/homebrew/opt/kafka/config/kafka2.properties
+open /opt/homebrew/opt/kafka/config/kafka3.properties
+```
+```kafka1.properties
+node.id=1
+broker.id=1
+log.dirs=/opt/homebrew/opt/kafka/data/kafka1
+listeners=PLAINTEXT://:9092,CONTROLLER://:9192
+process.roles=broker,controller
+controller.quorum.voters=1@localhost:9192,2@localhost:9193,3@localhost:9194
+controller.listener.names=CONTROLLER
+listener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+```
+```kafka2.properties
+node.id=2
+broker.id=2
+log.dirs=/opt/homebrew/opt/kafka/data/kafka2
+listeners=PLAINTEXT://:9093,CONTROLLER://:9193
+process.roles=broker,controller
+controller.quorum.voters=1@localhost:9192,2@localhost:9193,3@localhost:9194
+controller.listener.names=CONTROLLER
+listener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+```
+```kafka3.properties
+node.id=3
+broker.id=3
+log.dirs=/opt/homebrew/opt/kafka/data/kafka3
+listeners=PLAINTEXT://:9094,CONTROLLER://:9194
+process.roles=broker,controller
+controller.quorum.voters=1@localhost:9192,2@localhost:9193,3@localhost:9194
+controller.listener.names=CONTROLLER
+listener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+```
+
+# Preparing the data directories
+
+```shell
+mkdir -p /opt/homebrew/opt/kafka/data/kafka1 \
+    /opt/homebrew/opt/kafka/data/kafka2 \
+    /opt/homebrew/opt/kafka/data/kafka3
+```
+```shell
+open .zshrc
+```
+```
+export KAFKA_CLUSTER_ID=3jT9yIIYS-CzIvkk69WhdA
+```
+-> from `kafka-storage random-uuid`
+```shell
+kafka-storage format -t $KAFKA_CLUSTER_ID \
+    -c /opt/homebrew/opt/kafka/config/kafka1.properties
+```
+```shell
+kafka-storage format -t $KAFKA_CLUSTER_ID \
+    -c /opt/homebrew/opt/kafka/config/kafka2.properties
+```
+```shell
+kafka-storage format -t $KAFKA_CLUSTER_ID \
+    -c /opt/homebrew/opt/kafka/config/kafka3.properties
+```
+
+# Starting Kafka (daemon mode)
+
+```shell
+kafka-server-start -daemon /opt/homebrew/opt/kafka/config/kafka1.properties
+```
+```shell
+kafka-server-start -daemon /opt/homebrew/opt/kafka/config/kafka2.properties
+```
+```shell
+kafka-server-start -daemon /opt/homebrew/opt/kafka/config/kafka3.properties
+```
+```shell
+kafka-broker-api-versions --bootstrap-server localhost:9092,localhost:9093,localhost:9094
+```
+
+# Stopping Kafka
+
+## Stop all Kafka brokers
+
+```shell
+kafka-server-stop
+```
+
+## Stop a single Kafka broker
+
+```shell
+kafka-server-stop --node-id=1
+```
+
+## Stop Kafka brokers with a specific role
+
+```shell
+kafka-server-stop --process-role=broker
+```
