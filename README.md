@@ -137,3 +137,17 @@ kafka-console-consumer \
   --from-beginning \
   --bootstrap-server localhost:9092
 ```
+
+# Viewing topics
+
+```shell
+kafka-topics \
+  --describe \
+  --topic products.prices.changelog \
+  --bootstrap-server localhost:9092
+```
+```
+kafka-topics \
+  --list \
+  --bootstrap-server localhost:9092
+```
