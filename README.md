@@ -146,8 +146,44 @@ kafka-topics \
   --topic products.prices.changelog \
   --bootstrap-server localhost:9092
 ```
-```
+```shell
 kafka-topics \
   --list \
+  --bootstrap-server localhost:9092
+```
+
+# Create, customize, and delete topics
+
+```shell
+kafka-topics \
+  --delete \
+  --topic products.prices.changelog \
+  --bootstrap-server localhost:9092
+```
+```shell
+kafka-topics \
+  --create \
+  --topic products.prices.changelog \
+  --replication-factor 2 \
+  --partitions 2 \
+  --bootstrap-server localhost:9092
+```
+```shell
+kafka-topics \
+  --describe \
+  --topic products.prices.changelog \
+  --bootstrap-server localhost:9092
+```
+```shell
+kafka-topics \
+  --alter \
+  --topic products.prices.changelog \
+  --partitions 3 \
+  --bootstrap-server localhost:9092
+```
+```shell
+kafka-topics \
+  --describe \
+  --topic products.prices.changelog \
   --bootstrap-server localhost:9092
 ```
